@@ -19,9 +19,9 @@ class AdmiSiteTests(TestCase):
         self.client.force_login(self.admin_user)
 
         self.user = get_user_model().objects.create_user(
-            email = 'test@example.com',
-            password = 'test123',
-            name = 'Test user'
+            email='test@example.com',
+            password='test123',
+            name='Test user'
         )
 
     def test_user_list(self):

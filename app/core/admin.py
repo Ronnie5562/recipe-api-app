@@ -17,7 +17,8 @@ class UserAdmin(BaseUserAdmin):
     list_display = ['email', 'name']
     readonly_fields = ['last_login']
     fieldsets = (
-        (   None,
+        (
+            None,
             {
                 'fields': (
                     'email',
