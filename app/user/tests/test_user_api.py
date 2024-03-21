@@ -10,10 +10,6 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 
-from django.contrib.auth.hashers import make_password
-
-
-
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
 
@@ -42,12 +38,7 @@ class PublicUserApiTests(TestCase):
 
         user = get_user_model().objects.get(email=payload['email'])
 
-
-        print(f"payload['password']: {payload['password']}")
-        print(f"user.password: {user.password}")
         self.assertTrue(user.check_password(payload['password']))
-
-        # print(f"{payload={}}")
 
     def test_user_with_email_exists_error(self):
         """Test creating a user that already exists fails"""

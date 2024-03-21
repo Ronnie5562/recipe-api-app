@@ -18,15 +18,11 @@ class UserManager(BaseUserManager):
         """
         if not email:
             raise ValueError('Users must have an email address')
-        print(extra_fields)
-        print(password)
-        
+
         user = self.model(email=self.normalize_email(email), **extra_fields)
 
         user.set_password(password)
-        # print(make_password(password))
         user.save(using=self._db)
-        print(user.password)
 
         return user
 
