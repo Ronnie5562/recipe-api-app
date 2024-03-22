@@ -1,11 +1,18 @@
 """
 Test for models
 """
+
+from decimal import Decimal
+
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from core import models
+
 
 class ModelTests(TestCase):
+
+    # USER MODEL TESTS
 
     def test_create_user_with_email_successful(self):
         """
@@ -54,3 +61,24 @@ class ModelTests(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    # RECIPE MODEL TESTS
+
+    def test_recipe_str(self):
+        """
+        Test the recipe string representation
+        """
+        user=get_user_model().objects.create_user(
+            name="Test User",
+            email="test@example.com",
+            password="test123"
+        )
+        recipe = models.Recipe.objects.create(
+            user=user,
+            title='Steak and mushroom sauce',
+            time_minutes=20,
+            price=Decimal('5.00'),
+            description='Great recipe for steak and mushroom sauce'
+        )
+
+        self.assertEqual(str(recipe), recipe.title)
