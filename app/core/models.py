@@ -50,3 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        """String representation of a user"""
+        return f"{self.name} - {self.email}"
