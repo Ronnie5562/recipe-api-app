@@ -39,7 +39,7 @@ class AuthTokenSerializer(serializers.Serializer):
 
         # The authenticate method is provided by Django and it will check
         # the credentials and return the user if the credentials are correct
-        # otherwise it will return None
+        # otherwise it will an empty object
         user = authenticate(
             request=self.context.get('request'),
             username=email,
