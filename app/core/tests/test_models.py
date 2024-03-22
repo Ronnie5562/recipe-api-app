@@ -68,7 +68,7 @@ class ModelTests(TestCase):
         """
         Test the recipe string representation
         """
-        user=get_user_model().objects.create_user(
+        user = get_user_model().objects.create_user(
             name="Test User",
             email="test@example.com",
             password="test123"
