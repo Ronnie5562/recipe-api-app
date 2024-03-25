@@ -23,9 +23,9 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path('api/user/', include('user.urls')),
     path('api/recipe/', include('recipe.urls')),
-    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path(
         'api/redoc-docs/',
         SpectacularRedocView.as_view(url_name='api-schema'),

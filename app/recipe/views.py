@@ -11,7 +11,7 @@ from recipe import serializers
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """View for maange recipe APIs"""
+    """View for manage recipe APIs"""
     serializer_class = serializers.RecipeDetailSerializer
     queryset = Recipe.objects.all()
     authentication_classes = [TokenAuthentication]
@@ -27,6 +27,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Retrieve the recipes for the authenticated user"""
         return self.queryset.filter(user=self.request.user).order_by('-id')
 
-    # def perform_create(self, serializer):
-    #     """Create a new recipe"""
-    #     serializer.save(user=self.request.user)
+    def perform_create(self, serializer):
+        """Create a new recipe"""
+        serializer.save(user=self.request.user)
