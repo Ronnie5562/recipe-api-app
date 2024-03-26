@@ -27,7 +27,7 @@ git push origin main  # Change 'main' to your branch name if different
 
 # Check if the push was successful
 if [ $? -eq 0 ]; then
-    echo "Push successful!"
+    echo -e "\e[32mPush successful!\e[0m"
 else
-    echo "Failed to push changes. Please check your network connection and try again."
+    echo -e "\e[31mFailed to push changes. Please check your network connection and try again.\e[0m"
 fi
