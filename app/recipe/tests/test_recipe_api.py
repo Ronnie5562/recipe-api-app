@@ -1,6 +1,9 @@
 """
 Test for the recipe APIs.
 """
+import os
+import tempfile
+from PIL import Image
 from decimal import Decimal
 
 from django.test import TestCase
@@ -22,7 +25,13 @@ def detail_url(recipe_id):
 
 
 def create_user(**params):
+    """Create a sample user"""
     return get_user_model().objects.create_user(**params)
+
+
+def image_upload_url(recipe_id):
+    """Return URL for recipe image upload"""
+    return reverse('recipe:recipe-upload-image', args=[recipe_id])
 
 
 def create_recipe(user, **params):
@@ -410,3 +419,39 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.ingredients.count(), 0)
         self.assertFalse(recipe.ingredients.exists())
+
+
+class ImageUploadTests(TestCase):
+    """Test image upload for recipes"""
+
+    def setUp(self):
+        """Test Setup method"""
+        self.client = APIClient()
+        self.user = create_user(email="test@example.com", password="test123")
+        self.client.force_authenticate(self.user)
+        self.recipe = create_recipe(user=self.user)
+
+    def tearDown(self):
+        """Remove image files after test"""
+        self.recipe.image.delete()
+
+    def test_upload_image(self):
+        """Test uploading an image to a recipe"""
+        url = image_upload_url(self.recipe.id)
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
+            image = Image.new('RGB', (10, 10))
+            image.save(image_file, format='JPEG')
+            image_file.seek(0)
+            res = self.client.post(url, {'image': image_file}, format='multipart')
+
+        self.recipe.refresh_from_db()
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('image', res.data)
+        self.assertTrue(os.path.exists(self.recipe.image.path))
+
+    def test_upload_image_bad_request(self):
+        """Test uploading an invalid image"""
+        url = image_upload_url(self.recipe.id)
+        res = self.client.post(url, {'image': 'notimage'}, format='multipart')
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)

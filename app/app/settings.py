@@ -131,7 +131,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
+
+MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = '/vol/web/static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -145,5 +149,11 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_DEFAULTS = {
-    'SORT_OPERATION_PARAMETERS': False,
+    'SORT_OPERATION_PARAMETERS': True,
+}
+
+# Allows you to split the request body into individual components
+# I used it here so that I can be able to upload images to the API using the browsable API
+SPECTACULAR_SETTINGS = {
+    'COMPONENT_SPLIT_REQUEST': True,
 }
