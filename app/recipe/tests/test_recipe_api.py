@@ -420,6 +420,58 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(recipe.ingredients.count(), 0)
         self.assertFalse(recipe.ingredients.exists())
 
+    def test_filter_recipe_by_tags(self):
+        """Test Filtering recipes by tags is successful"""
+        r1 = create_recipe(user=self.user, title="Jollof Rice")
+        r2 = create_recipe(user=self.user, title="The Vegetable Curry")
+        r3 = create_recipe(user=self.user, title="Chicken and Chips")
+
+        tag1 = Tag.objects.create(user=self.user, name="Nigerian")
+        tag2 = Tag.objects.create(user=self.user, name="Vegetarian")
+
+        r1.tags.add(tag1)
+        r2.tags.add(tag2)
+
+        params = {
+            'tags': f'{tag1.id},{tag2.id}'
+        }
+        res = self.client.get(RECIPES_URL, params)
+
+        s1 = RecipeSerializer(r1)
+        s2 = RecipeSerializer(r2)
+        s3 = RecipeSerializer(r3)
+
+        self.assertEqual(len(res.data), 2)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
+    def test_filter_recipe_by_ingredients(self):
+        """Test Filtering recipes by ingredients is successful"""
+        r1 = create_recipe(user=self.user, title="Jollof Rice")
+        r2 = create_recipe(user=self.user, title="The Vegetable Curry")
+        r3 = create_recipe(user=self.user, title="Chicken and Chips")
+
+        ingredient1 = Ingredient.objects.create(user=self.user, name="Rice")
+        ingredient2 = Ingredient.objects.create(user=self.user, name="Carrot")
+
+        r1.ingredients.add(ingredient1)
+        r2.ingredients.add(ingredient2)
+
+        params = {
+            'ingredients': f'{ingredient1.id},{ingredient2.id}'
+        }
+        res = self.client.get(RECIPES_URL, params)
+
+        s1 = RecipeSerializer(r1)
+        s2 = RecipeSerializer(r2)
+        s3 = RecipeSerializer(r3)
+
+        self.assertEqual(len(res.data), 2)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
 
 class ImageUploadTests(TestCase):
     """Test image upload for recipes"""
